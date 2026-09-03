@@ -1,21 +1,24 @@
-from utils.llm import llm
-
-from prompts.prompts import BUDGET_PROMPT
-from schemas.budget import BudgetOutput
+from typing import List
+from pydantic import BaseModel, Field
 
 
-def budget_agent(state):
-
-    structured_llm = llm.with_structured_output(BudgetOutput)
-
-    prompt = BUDGET_PROMPT.format(
-        monthly_income=state["monthly_income"],
-        monthly_expenses=state["monthly_expenses"],
-        savings=state["savings"]
+class BudgetOutput(BaseModel):
+    monthly_income: float = Field(
+        description="Monthly income"
     )
 
-    response = structured_llm.invoke(prompt)
+    monthly_expenses: float = Field(
+        description="Monthly expenses"
+    )
 
-    state["budget_plan"] = response
+    recommended_monthly_savings: float = Field(
+        description="Recommended monthly savings amount"
+    )
 
-    return state
+    emergency_fund_target: float = Field(
+        description="Target emergency fund amount"
+    )
+
+    recommendations: List[str] = Field(
+        description="Budget improvement recommendations"
+    )

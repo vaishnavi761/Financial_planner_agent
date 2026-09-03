@@ -1,24 +1,31 @@
-from utils.llm import llm
-
-from prompts.prompts import INVESTMENT_PROMPT
-from schemas.investment import InvestmentOutput
+from pydantic import BaseModel, Field
 
 
-def investment_agent(state):
-
-    structured_llm = llm.with_structured_output(InvestmentOutput)
-
-    prompt = INVESTMENT_PROMPT.format(
-        age=state["age"],
-        monthly_income=state["monthly_income"],
-        savings=state["savings"],
-        debt=state["debt"],
-        goal=state["goal"],
-        risk_level=state["risk_analysis"].risk_level
+class InvestmentOutput(BaseModel):
+    emergency_fund: int = Field(
+        description="Percentage allocation"
     )
 
-    response = structured_llm.invoke(prompt)
+    equity: int = Field(
+        description="Percentage allocation"
+    )
 
-    state["investment_plan"] = response
+    mutual_funds: int = Field(
+        description="Percentage allocation"
+    )
 
-    return state
+    fixed_deposits: int = Field(
+        description="Percentage allocation"
+    )
+
+    gold: int = Field(
+        description="Percentage allocation"
+    )
+
+    cash: int = Field(
+        description="Percentage allocation"
+    )
+
+    explanation: str = Field(
+        description="Reason for this allocation"
+    )

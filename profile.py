@@ -1,24 +1,20 @@
-from utils.llm import llm
-from schemas.profile import ProfileOutput
-from prompts.prompts import PROFILE_PROMPT
+from typing import List
+from pydantic import BaseModel, Field
 
 
-def profile_agent(state):
-
-    structured_llm = llm.with_structured_output(ProfileOutput)
-
-    prompt = PROFILE_PROMPT.format(
-        age=state["age"],
-        occupation=state["occupation"],
-        monthly_income=state["monthly_income"],
-        monthly_expenses=state["monthly_expenses"],
-        savings=state["savings"],
-        debt=state["debt"],
-        investment=state["investment"],
+class ProfileOutput(BaseModel):
+    financial_health_score: float = Field(
+        description="Overall financial health score out of 10"
     )
 
-    response = structured_llm.invoke(prompt)
+    strengths: List[str] = Field(
+        description="List of financial strengths"
+    )
 
-    state["profile_analysis"] = response
+    weaknesses: List[str] = Field(
+        description="List of financial weaknesses"
+    )
 
-    return state
+    summary: str = Field(
+        description="Overall financial profile summary"
+    )

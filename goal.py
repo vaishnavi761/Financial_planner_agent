@@ -1,23 +1,20 @@
-from utils.llm import llm
-
-from prompts.prompts import GOAL_PROMPT
-from schemas.goal import GoalOutput
+from typing import List
+from pydantic import BaseModel, Field
 
 
-def goal_agent(state):
-
-    structured_llm = llm.with_structured_output(GoalOutput)
-
-    prompt = GOAL_PROMPT.format(
-        age=state["age"],
-        monthly_income=state["monthly_income"],
-        savings=state["savings"],
-        goal=state["goal"],
-        financial_goal=state["financial_goal"]
+class GoalOutput(BaseModel):
+    goal_name: str = Field(
+        description="Financial goal"
     )
 
-    response = structured_llm.invoke(prompt)
+    estimated_years: float = Field(
+        description="Estimated years to achieve the goal"
+    )
 
-    state["goal_plan"] = response
+    monthly_saving_required: float = Field(
+        description="Monthly savings required"
+    )
 
-    return state
+    action_steps: List[str] = Field(
+        description="Action steps to achieve the goal"
+    )

@@ -1,23 +1,16 @@
-from utils.llm import llm
-
-from prompts.prompts import RISK_PROMPT
-from schemas.risk import RiskOutput
+from typing import List
+from pydantic import BaseModel, Field
 
 
-def risk_agent(state):
-
-    structured_llm = llm.with_structured_output(RiskOutput)
-
-    prompt = RISK_PROMPT.format(
-        age=state["age"],
-        monthly_income=state["monthly_income"],
-        savings=state["savings"],
-        debt=state["debt"],
-        risk=state["risk"]
+class RiskOutput(BaseModel):
+    risk_level: str = Field(
+        description="Low, Moderate, or High"
     )
 
-    response = structured_llm.invoke(prompt)
+    explanation: str = Field(
+        description="Reason for assigned risk level"
+    )
 
-    state["risk_analysis"] = response
-
-    return state
+    precautions: List[str] = Field(
+        description="Investment precautions"
+    )
